@@ -1,31 +1,21 @@
+// src/api/api.js
 import axios from "axios";
 
-// export const handlePost = async (data) => {
-//   try {
-//     const response = await axios.post('https://fakerestapi.azurewebsites.net/api/v1/Authors', data);
-//     console.log(response.data)
-//     return response.data; 
-//   } catch (error) {
-//     console.error('Error posting data: ', error);
-//   }
-// };
-
-
-//  export const handleGet = async (data) => {
-//   //  try {
-//   //    const response = await axios.get('https://fakerestapi.azurewebsites.net/api/v1/Authors' , data);
-//   //    if (response.status === 200) {
-//   //       console.log(response.data)
-//   //      return response.data; 
-       
-//   //    }
-//   //  } catch (error) {
-//   //    console.error("Error fetching data: ", error);
-//   //    throw error;
-//   //  }
-
-//   const response = await axios.get('https://fakerestapi.azurewebsites.net/api/v1/Authors/authors/books/33' )
-//   console.log(response.data.firstName)
-//   return response.data.firstName;
-//  };
- 
+export const handleGet = async (id) => {
+  try {
+    const response = await axios.get(`http://localhost:5001/Users/${id}`);
+    return response.data; // Return the actual data
+  } catch (error) {
+    console.error('Error fetching data:', error);
+  }
+};
+export const handlePut = async (id, updatedData) => {
+    await axios.put(`http://localhost:5001/Users/${id}`, updatedData)
+      .then((response) => {
+        console.log(response.data);
+      })
+      .catch((error) => {
+        console.error('Error updating user: ', error);
+      });
+  };
+  

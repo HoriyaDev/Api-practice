@@ -1,13 +1,16 @@
+
 import React, { useEffect, useState } from 'react';
-import { useLocation, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import axios from 'axios';
+import EditModel from '../components/model/EditModel';
 
 const Table = () => {
-  const location = useLocation();
+  const [open, setOpen] = useState(false);
   const [data, setData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const recordsPerPage = 5;
+  const [selectedUserId, setSelectedUserId] = useState(null); // Add state for selected userId
 
+  const recordsPerPage = 5;
   const lastIndex = currentPage * recordsPerPage;
   const firstIndex = lastIndex - recordsPerPage;
   const currentRecords = data.slice(firstIndex, lastIndex);
@@ -16,8 +19,8 @@ const Table = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get('http://localhost:5001/Users'); 
-        setData(response.data); 
+        const response = await axios.get('http://localhost:5001/Users');
+        setData(response.data);
       } catch (error) {
         console.error('Error fetching data: ', error);
       }
@@ -26,10 +29,19 @@ const Table = () => {
     fetchData();
   }, []);
 
+  const handleOpen = (id) => {
+    setSelectedUserId(id); 
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+    setSelectedUserId(null); 
+  };
+
   const handleDelete = async (id) => {
     try {
       await axios.delete(`http://localhost:5001/Users/${id}`);
-      // Filter out the deleted item from the state
       const newArray = data.filter((item) => item.id !== id);
       setData(newArray);
     } catch (error) {
@@ -69,8 +81,20 @@ const Table = () => {
               <td className="border px-1 py-2">{item.password}</td>
               <td className="border px-2 py-2">
                 <div>
-                  <button type='button' className='bg-green-400 px-3 py-1 rounded-2xl'>Edit</button>
-                  <button type='button' className='bg-red-400 px-3 py-1 rounded-2xl' onClick={() => handleDelete(item.id)}>Delete</button>
+                  <button
+                    type='button'
+                    className='bg-green-400 px-3 py-1 rounded-2xl'
+                    onClick={() => handleOpen(item.id)} // Pass user ID when opening the edit modal
+                  >
+                    Edit
+                  </button>
+                  <button
+                    type='button'
+                    className='bg-red-400 px-3 py-1 rounded-2xl'
+                    onClick={() => handleDelete(item.id)}
+                  >
+                    Delete
+                  </button>
                 </div>
               </td>
             </tr>
@@ -86,6 +110,7 @@ const Table = () => {
           Next
         </button>
       </div>
+      <EditModel open={open} onClose={handleClose} userId={selectedUserId} /> {/* Pass selectedUserId as a prop */}
     </div>
   );
 };
