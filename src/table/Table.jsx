@@ -59,8 +59,7 @@ const Table = () => {
   const handleDelete = async (id) => {
     try {
       await axios.delete(`http://localhost:5001/Users/${id}`);
-      const newArray = data.filter((item) => item.id !== id);
-      setData(newArray);
+      setData((prevData) => prevData.filter((item) => item.id !== id));
     } catch (error) {
       console.error('Error deleting user: ', error);
     }
@@ -68,7 +67,7 @@ const Table = () => {
   };
 
   const handleSearchInputChange = (e) => {
-    setSearchUser(e.target.value); // Update the search input
+    setSearchUser(e.target.value); 
   };
 
   const goToNextPage = () => {
@@ -124,7 +123,7 @@ const Table = () => {
                   </button>
                   <button
                     type="button"
-                    className="bg-blue-600 px-2 py-1 rounded-lg ml-2"
+                    className="bg-blue-600 px-2 py-1 rounded-lg ml-1"
                     onClick={() => handleOpen(item.id)}
                   >
                     <FaEdit size="20px" className="text-white text-center" />
@@ -161,8 +160,8 @@ const Table = () => {
         </button>
       </div>
 
-      <ReadModel open={openRead} onClose={handleClose} userId={selectedUserId} />
-      <EditModel open={open} onClose={handleClose} userId={selectedUserId} />
+      <ReadModel open={openRead} onClose={handleClose} userId={selectedUserId}  />
+      <EditModel open={open} onClose={handleClose} userId={selectedUserId} setData={setData} data={data} />
     </div>
   );
 };

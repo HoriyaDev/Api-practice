@@ -5,7 +5,7 @@ import { IoKeyOutline } from "react-icons/io5";
 import { MdOutlineMailOutline } from "react-icons/md";
 
 
-const EditModel = ({ open, onClose, userId }) => {
+const EditModel = ({ open, onClose, userId, setData , data}) => {
   const [input, setInput] = useState({
     userName: '',
     email: '',
@@ -37,11 +37,20 @@ const EditModel = ({ open, onClose, userId }) => {
     }
   }, [userId, open]);
 
+ 
   const handleUpdate = async (e) => {
     e.preventDefault();
-    await handlePut(userId, input); 
-    onClose(); 
+    try {
+      const response = await handlePut(userId, input);
+      setData((prevData) => 
+        prevData.map((user) => (user.id === userId ? { ...user, ...input } : user)) 
+      );
+      onClose(); 
+    } catch (error) {
+      console.error('Error updating user: ', error);
+    }
   };
+  
 
   if (!open) return null;
 
