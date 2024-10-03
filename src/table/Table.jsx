@@ -3,14 +3,21 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import EditModel from '../components/model/EditModel';
+import { FaRegEye } from "react-icons/fa";
+import { FaEdit } from "react-icons/fa";
+import { IoCloseSharp } from "react-icons/io5";
+import ReadModel from '../components/model/ReadModel';
+
+
 
 const Table = () => {
   const [open, setOpen] = useState(false);
+  const[openRead , setOpenRead] = useState(false)
   const [data, setData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedUserId, setSelectedUserId] = useState(null); // Add state for selected userId
 
-  const recordsPerPage = 5;
+  const recordsPerPage = 4;
   const lastIndex = currentPage * recordsPerPage;
   const firstIndex = lastIndex - recordsPerPage;
   const currentRecords = data.slice(firstIndex, lastIndex);
@@ -33,9 +40,14 @@ const Table = () => {
     setSelectedUserId(id); 
     setOpen(true);
   };
+  const handleOpenRead = (id) => {
+    setSelectedUserId(id); 
+    setOpenRead(true);
+  };
 
   const handleClose = () => {
     setOpen(false);
+    setOpenRead(false)
     setSelectedUserId(null); 
   };
 
@@ -47,6 +59,7 @@ const Table = () => {
     } catch (error) {
       console.error('Error deleting user: ', error);
     }
+    alert("Are you Sure?")
   };
 
   const goToNextPage = () => {
@@ -58,42 +71,53 @@ const Table = () => {
   };
 
   return (
-    <div className="w-[500px] mt-10 mx-auto p-5 bg-white shadow-lg">
+    <div className="w-[900px] mt-10 mx-auto p-5 bg-white shadow-2xl">
+      <div className="flex justify-end">
       <Link to='/form'>
-        <button type='button' className="px-3 py-2 bg-gray-500 text-white">
-          Add
+        <button type='button' className="px-3 py-1 bg-blue-500 right-0 text-white">
+          +Add
         </button>
       </Link>
+      </div>
       <table className="table-auto w-full mt-4">
-        <thead>
+        <thead className='border-2 border-gray-200'>
           <tr>
             <th className="px-4 py-2">Id</th>
             <th className="px-4 py-2">User Name</th>
+            <th className="px-4 py-2">Email</th>
             <th className="px-4 py-2">Password</th>
             <th className="px-4 py-2">Action</th>
           </tr>
         </thead>
         <tbody>
           {currentRecords.map((item) => (
-            <tr key={item.id}>
-              <td className="border px-1 py-2">{item.id}</td>
-              <td className="border px-1 py-2">{item.userName}</td>
-              <td className="border px-1 py-2">{item.password}</td>
+            <tr key={item.id} className='p-2'>
+              <td className="border px-2 py-2">{item.id}</td>
+              <td className="border px-2 py-2">{item.userName}</td>
+              <td className="border px-2 py-2">{item.email}</td>
+              <td className="border px-2 py-2">{item.password}</td>
               <td className="border px-2 py-2">
                 <div>
                   <button
                     type='button'
-                    className='bg-green-400 px-3 py-1 rounded-2xl'
-                    onClick={() => handleOpen(item.id)} // Pass user ID when opening the edit modal
+                    className='bg-slate-600 px-2 py-1 rounded-lg '
+                    onClick={() => handleOpenRead(item.id)} // Pass user ID when opening the edit modal
                   >
-                    Edit
+                    <FaRegEye size={'20px'} className='text-white' />
                   </button>
                   <button
                     type='button'
-                    className='bg-red-400 px-3 py-1 rounded-2xl'
+                    className='bg-blue-600 px-2 py-1 rounded-lg  ml-2'
+                    onClick={() => handleOpen(item.id)} // Pass user ID when opening the edit modal
+                  >
+                    <FaEdit size={'20px'} className='text-white text-center' />
+                  </button>
+                  <button
+                    type='button'
+                    className='bg-red-600 px-3 py-1 rounded-lg ml-1'
                     onClick={() => handleDelete(item.id)}
                   >
-                    Delete
+                    <IoCloseSharp size={'20px'} className='text-white text-center' />
                   </button>
                 </div>
               </td>
@@ -109,7 +133,8 @@ const Table = () => {
         <button onClick={goToNextPage} disabled={currentPage === totalPages} className="px-4 py-2 bg-gray-500 text-white disabled:opacity-50">
           Next
         </button>
-      </div>
+      </div> 
+      <ReadModel open={openRead} onClose={handleClose} userId={selectedUserId}/>
       <EditModel open={open} onClose={handleClose} userId={selectedUserId} /> {/* Pass selectedUserId as a prop */}
     </div>
   );

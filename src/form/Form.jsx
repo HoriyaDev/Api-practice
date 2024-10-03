@@ -1,118 +1,21 @@
-// import axios from 'axios';
-// import React, { useState } from 'react'
-
-// const Form = () => {
-//   const url = "http://localhost:3001/Users"; 
-
-//   const [user , setUser] = useState({
-//     name: '',
-//     password:''
-//   })
-  
-  
-//   const handleInputChange = (e) => {
-//     const { name, value } = e.target;
-//     setUser((prevData) => ({
-//       ...prevData,
-//       [name]: value
-//     }));
-//   };
-
-//   // const handleSubmit =(e)=>{
-    
-//   //   e.preventDefault();
-//   //   axios.post(url,{
-//   //     userName:user.name,
-//   //     password:user.password,
-//   //   })
-//   //   .then((response=>{
-//   //     console.log(response)
-//   //     console.log(response.data)
-//   //   }))
-//   //   console.log(user)
-//   //    setUser({
-//   //     name:'',
-//   //     password:''
-//   //    })
-//   // }
-
-
-//   const handleSubmit = (e) => {
-//     e.preventDefault();
-//     axios.post(url, {
-//         userName: user.name,
-//         password: user.password,
-//     })
-//     .then((response) => {
-//         console.log("Response:", response);
-//         console.log("Data:", response.data);
-//         setUser({ name: '', password: '' }); // Reset the form
-//     })
-//     .catch((error) => {
-//         console.error("There was an error posting the data!", error);
-//     });
-// }
-
-
-//   return (
-//     <div className='bg-slate-500 w-1/2 mx-auto p-5 mt-20'>
-//       <form onSubmit={handleSubmit}>
-//       <div className='rounded-full flex flex-col mt-5 w-[320px] ml-3'>
-//             <label htmlFor='name'>First Name</label>
-//             <input
-//               type='text'
-//               name='name'
-//               id='name'
-//               value={user.name}
-//               onChange={handleInputChange}
-              
-//               className='focus:outline-none border-none p-2 rounded-xl'
-//             />
-//           </div>
-//           <div className='rounded-full flex flex-col mt-5 w-[320px] ml-3'>
-//             <label htmlFor='password'>Password</label>
-//             <input
-//               type='password'
-//               name='password'
-//               id='password'
-//               value={user.password}
-//               onChange={handleInputChange}
-             
-//               className='focus:outline-none border-none p-2 rounded-xl'
-//             />
-//           </div>
-
-
-//           <button
-//             type='submit'
-//             className='bg-blue-900 text-white px-4 py-1 rounded-3xl mt-5'>
-//             Submit
-//           </button>
-
-//       </form>
-//     </div>
-//   )
-// }
-
-// export default Form
-
-
-
-
-
-
-
 
 import axios from 'axios';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { FaRegUser } from "react-icons/fa6";
+import { MdOutlineMailOutline } from "react-icons/md";
+import { IoKeyOutline } from "react-icons/io5";
+
+
+
 
 const Form = () => {
 
   const navigate = useNavigate()
-  const url = "http://localhost:5001/Users"; // Update to the correct URL
+  const url = "http://localhost:5001/Users"; 
   const [user, setUser] = useState({
     name: '',
+    email:'',
     password: ''
   });
 
@@ -128,14 +31,19 @@ const Form = () => {
     e.preventDefault();
     axios.post(url, {
       userName: user.name,
+      email:user.email,
       password: user.password,
     })
     .then((response) => {
       console.log("Response:", response);
       console.log("Data:", response.data);
-      setUser({ name: '', password: '' }); 
+      setUser({
+         name: '',
+          password: '' ,
+           email:''
+          }); 
       navigate('/')
-      // Reset form
+      
     })
     .catch((error) => {
       console.error("There was an error posting the data!", error);
@@ -143,31 +51,49 @@ const Form = () => {
   };
 
   return (
-    <div className='bg-slate-500 w-1/2 mx-auto p-5 mt-20'>
+    <div  className="w-[500px] mt-28 mx-auto px-10 py-5 bg-white shadow-2xl">
+      <h1 className='font-semibold text-center text-3xl text-blue-500'>User Form</h1>
       <form onSubmit={handleSubmit}>
-        <div className='rounded-full flex flex-col mt-5 w-[320px] ml-3'>
-          <label htmlFor='name'>First Name</label>
+        <div className='rounded-full  mt-5 w-[320px] ml-3 relative'>
+          <label htmlFor='name'></label>
+          <FaRegUser size={'20px'} className='absolute left-3 top-1/2 transform inset-y-2 text-blue-500' />
           <input
             type='text'
             name='name'
             id='name'
+            placeholder='UserName'
             value={user.name}
             onChange={handleInputChange}
-            className='focus:outline-none border-none p-2 rounded-xl'
+            className='focus:outline-none w-[400px] border-2 mt-5 border-gray-300 p-2 rounded-xl pl-10 text-blue-500 placeholder-blue-500'
           />
         </div>
-        <div className='rounded-full flex flex-col mt-5 w-[320px] ml-3'>
-          <label htmlFor='password'>Password</label>
+        <div className='rounded-full  mt-5 w-[320px] ml-3 relative'>
+          <label htmlFor='email'></label>
+          <MdOutlineMailOutline size={'20px'} className='absolute left-3  transform inset-y-3  text-blue-500' />
+          <input
+            type='email'
+            name='email'
+            id='email'
+            placeholder='E-mail'
+            value={user.email}
+            onChange={handleInputChange}
+            className='focus:outline-none w-[400px] border-2  border-gray-300 p-2 rounded-xl pl-10 text-blue-500  placeholder-blue-500'
+          />
+        </div>
+        <div className='rounded-full  mt-5 w-[320px] ml-3 relative'>
+          <label htmlFor='password'></label>
+          <IoKeyOutline size={'20px'} className='absolute left-3  transform inset-y-3 text-blue-500' />
           <input
             type='password'
             name='password'
             id='password'
+            placeholder='Password'
             value={user.password}
             onChange={handleInputChange}
-            className='focus:outline-none border-none p-2 rounded-xl'
+            className='focus:outline-none w-[400px] border-2  border-gray-300 p-2 rounded-xl pl-10 text-blue-500  placeholder-blue-500'
           />
         </div>
-        <button type='submit' className='bg-blue-900 text-white px-4 py-1 rounded-3xl mt-5'>
+        <button type='submit' className='bg-blue-500 w-[400px] text-white px-4 py-2 ml-3 rounded-xl mt-5'>
           Submit
         </button>
       </form>
